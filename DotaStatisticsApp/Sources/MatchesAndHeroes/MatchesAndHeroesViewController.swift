@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CloudKit
 
 final class MatchesAndHeroesViewController: UIViewController {
     var gameModes: [String : String] = [:]
@@ -31,13 +32,25 @@ final class MatchesAndHeroesViewController: UIViewController {
         super.viewDidLoad()
         
         presenter.viewDidLoad(ui: matchesView)
-        
+        setNavBatTitle()
+        setView()
+    }
+    
+    private func setNavBatTitle() {
+        if gameModes.isEmpty {
+            title = "Последние матчи"
+        } else {
+            title = "Герои"
+        }
+    }
+    
+    private func setView() {
         matchesView.gameModes = gameModes
         matchesView.allHeroes = allHeroes
         matchesView.matchCellTapped = { [weak self] id in
-            let presenter = MatchInfoPresenter(matchId: id)
-            let matchInfoVC = MatchInfoViewController(presenter: presenter)
-            self?.navigationController?.pushViewController(matchInfoVC, animated: true)
+            if let self = self {
+                self.presenter.cellTapped(id:id, heroes: self.allHeroes, gameModes: self.gameModes)
+            }
         }
     }
 }

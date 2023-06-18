@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-class ButtonTableViewCell: UITableViewCell {
+final class ButtonTableViewCell: UITableViewCell {
     private let label = UILabel()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {

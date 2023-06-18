@@ -33,17 +33,17 @@ final class TotalsTableViewCell: UITableViewCell {
         rankImageView.clipsToBounds = true
         contentView.addSubview(rankImageView)
         
-        matchesCountLabel.font = UIFont.systemFont(ofSize: 20)
+        matchesCountLabel.font = UIFont.systemFont(ofSize: CGFloat(Constants.largeFontSize))
         matchesCountLabel.numberOfLines = 2
         matchesCountLabel.textAlignment = .center
         contentView.addSubview(matchesCountLabel)
         
-        winRateLabel.font = UIFont.systemFont(ofSize: 20)
+        winRateLabel.font = UIFont.systemFont(ofSize: CGFloat(Constants.largeFontSize))
         winRateLabel.numberOfLines = 2
         winRateLabel.textAlignment = .center
         contentView.addSubview(winRateLabel)
         
-        kdaLabel.font = UIFont.systemFont(ofSize: 20)
+        kdaLabel.font = UIFont.systemFont(ofSize: CGFloat(Constants.largeFontSize))
         kdaLabel.numberOfLines = 2
         kdaLabel.textAlignment = .center
         contentView.addSubview(kdaLabel)
@@ -51,39 +51,38 @@ final class TotalsTableViewCell: UITableViewCell {
     
     private func setConstraints() {
         starsImageView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
+            make.leading.equalToSuperview().offset(CGFloat(Constants.bigConstraintOffset))
             make.centerY.equalToSuperview()
             make.width.equalTo(65)
             make.height.equalTo(65)
         }
         
         rankImageView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
+            make.leading.equalToSuperview().offset(CGFloat(Constants.bigConstraintOffset))
             make.centerY.equalToSuperview()
             make.width.equalTo(65)
             make.height.equalTo(65)
         }
         
         matchesCountLabel.snp.makeConstraints { make in
-            make.leading.equalTo(rankImageView.snp.trailing).offset(40)
+            make.leading.equalTo(rankImageView.snp.trailing).offset(CGFloat(Constants.hugeConstraintOffset))
             make.centerY.equalToSuperview()
         }
         
         winRateLabel.snp.makeConstraints { make in
-            make.leading.equalTo(matchesCountLabel.snp.trailing).offset(40)
+            make.leading.equalTo(matchesCountLabel.snp.trailing).offset(CGFloat(Constants.hugeConstraintOffset))
             make.centerY.equalToSuperview()
         }
         
         kdaLabel.snp.makeConstraints { make in
-            make.leading.equalTo(winRateLabel.snp.trailing).offset(40)
+            make.leading.equalTo(winRateLabel.snp.trailing).offset(CGFloat(Constants.hugeConstraintOffset))
             make.centerY.equalToSuperview()
         }
     }
     
     func configure(withSummary summary: Summary) {
-        
         let rank = "\(summary.rankTier ?? 0)"
-        
+
         NetworkManager.shared.fetchImage(from: "https://www.opendota.com/assets/images/dota2/rank_icons/rank_icon_\(rank.first ?? "0").png") { [weak self] imageData in
             self?.rankImageView.image = UIImage(data: imageData)
         }
@@ -100,7 +99,6 @@ final class TotalsTableViewCell: UITableViewCell {
 матчей
 """
         }
-        
         let win = summary.winLose?.win ?? 0
         let lose = summary.winLose?.lose ?? 0
         let winRate = (round((Double(win) / Double(win + lose)) * 10000) / 100)

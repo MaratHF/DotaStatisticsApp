@@ -27,24 +27,28 @@ final class FavoritePlayersViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        title = "Избранные игроки"
+        navigationItem.backButtonTitle = "Назад"
+        
         presenter.viewDidLoad(ui: favoritePlayersView)
         presenter.setFavoritePlayers(forUi: favoritePlayersView)
-        
-        favoritePlayersView.searchBarActionHandler = { [weak self] _ in
-            let presenter = PlayersPresenter()
-            let playersVC = PlayersViewController(presenter: presenter)
-            self?.navigationController?.pushViewController(playersVC, animated: true)
-        }
-        
-        favoritePlayersView.cellTappedHandler = { [weak self] id in
-            let presenter = PlayerDetailPresenter(playerId: id)
-            let playerDetailVC = PlayerDetailViewController(presenter: presenter, id: id)
-            self?.navigationController?.pushViewController(playerDetailVC, animated: true)
-        }
+        setViewHandlers()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         presenter.setFavoritePlayers(forUi: favoritePlayersView)
+    }
+    
+    private func setViewHandlers() {
+        favoritePlayersView.searchBarActionHandler = { [weak self] _ in
+            guard let self = self else { return }
+            self.presenter.searchBarTapped()
+        }
+        
+        favoritePlayersView.cellTappedHandler = { [weak self] id in
+            guard let self = self else { return }
+            self.presenter.cellTapped(id: id)
+        }
     }
 }

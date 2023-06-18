@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-protocol FavoritePlayersViewProtocol {
+protocol FavoritePlayersViewProtocol: AnyObject {
     func set(favoritePlayers: [Profile])
 }
 

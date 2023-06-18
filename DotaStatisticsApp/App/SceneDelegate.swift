@@ -14,12 +14,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
-        let presenter = FavoritePlayersPresenter(favoritePlayers: [])
-        let favoritePlayersVC = FavoritePlayersViewController(presenter: presenter)
-        let navigationVC = UINavigationController(rootViewController: favoritePlayersVC)
+        let navigationController = UINavigationController()
+        let assemblyBuilder = AssemblyModuleBuilder()
+        let router = Router(navigationController: navigationController, assemblyBuilder: assemblyBuilder)
+        router.initialViewController()
         
         let window = UIWindow(windowScene: windowScene)
-        window.rootViewController = navigationVC
+        window.rootViewController = navigationController
         window.makeKeyAndVisible()
         self.window = window
     }

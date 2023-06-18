@@ -22,7 +22,6 @@
 		040719EB2A38FF8000263B14 /* MatchInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040719EA2A38FF8000263B14 /* MatchInfoViewController.swift */; };
 		040719ED2A38FFA400263B14 /* MatchInfoPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040719EC2A38FFA400263B14 /* MatchInfoPresenter.swift */; };
 		040719EF2A39033600263B14 /* MatchInfoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040719EE2A39033600263B14 /* MatchInfoTableViewCell.swift */; };
-		040719F12A39743000263B14 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040719F02A39743000263B14 /* Item.swift */; };
 		040719FD2A3B478E00263B14 /* FavoritePlayersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040719FC2A3B478E00263B14 /* FavoritePlayersView.swift */; };
 		04071A002A3B4A7000263B14 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040719FF2A3B4A7000263B14 /* SearchView.swift */; };
 		04071A022A3B7B0D00263B14 /* FavoritePlayersPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04071A012A3B7B0D00263B14 /* FavoritePlayersPresenter.swift */; };
@@ -41,6 +40,10 @@
 		04B6E9742A3C9D3200734C49 /* MatchesAndHeroesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B6E9732A3C9D3200734C49 /* MatchesAndHeroesView.swift */; };
 		04B6E9762A3C9D4C00734C49 /* MatchesAndHeroesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B6E9752A3C9D4C00734C49 /* MatchesAndHeroesViewController.swift */; };
 		04B6E9782A3C9D6F00734C49 /* MatchesAndHeroesViewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B6E9772A3C9D6F00734C49 /* MatchesAndHeroesViewPresenter.swift */; };
+		04DD3A392A3E10AB001D549C /* AssemblyModuleBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DD3A382A3E10AB001D549C /* AssemblyModuleBuilder.swift */; };
+		04DD3A3B2A3E1ACA001D549C /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DD3A3A2A3E1ACA001D549C /* Router.swift */; };
+		04DD3A3E2A3EF4B1001D549C /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DD3A3D2A3EF4B1001D549C /* Alert.swift */; };
+		04DD3A402A3F6F9D001D549C /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DD3A3F2A3F6F9D001D549C /* Constants.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -59,7 +62,6 @@
 		040719EA2A38FF8000263B14 /* MatchInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchInfoViewController.swift; sourceTree = "<group>"; };
 		040719EC2A38FFA400263B14 /* MatchInfoPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchInfoPresenter.swift; sourceTree = "<group>"; };
 		040719EE2A39033600263B14 /* MatchInfoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchInfoTableViewCell.swift; sourceTree = "<group>"; };
-		040719F02A39743000263B14 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		040719FC2A3B478E00263B14 /* FavoritePlayersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritePlayersView.swift; sourceTree = "<group>"; };
 		040719FF2A3B4A7000263B14 /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
 		04071A012A3B7B0D00263B14 /* FavoritePlayersPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritePlayersPresenter.swift; sourceTree = "<group>"; };
@@ -79,6 +81,10 @@
 		04B6E9732A3C9D3200734C49 /* MatchesAndHeroesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchesAndHeroesView.swift; sourceTree = "<group>"; };
 		04B6E9752A3C9D4C00734C49 /* MatchesAndHeroesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchesAndHeroesViewController.swift; sourceTree = "<group>"; };
 		04B6E9772A3C9D6F00734C49 /* MatchesAndHeroesViewPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchesAndHeroesViewPresenter.swift; sourceTree = "<group>"; };
+		04DD3A382A3E10AB001D549C /* AssemblyModuleBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssemblyModuleBuilder.swift; sourceTree = "<group>"; };
+		04DD3A3A2A3E1ACA001D549C /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
+		04DD3A3D2A3EF4B1001D549C /* Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
+		04DD3A3F2A3F6F9D001D549C /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,7 +116,6 @@
 				046BE1DD2A30E718003882E4 /* Player.swift */,
 				040719DB2A3510AD00263B14 /* Match.swift */,
 				040719DF2A35BBA800263B14 /* Hero.swift */,
-				040719F02A39743000263B14 /* Item.swift */,
 				04071A072A3B90F800263B14 /* FavoritePlayers.xcdatamodeld */,
 			);
 			path = Models;
@@ -120,8 +125,10 @@
 			isa = PBXGroup;
 			children = (
 				046BE1DB2A2FB17D003882E4 /* NetworkManager.swift */,
-				040719FF2A3B4A7000263B14 /* SearchView.swift */,
 				04071A052A3B8FDC00263B14 /* StorageManager.swift */,
+				040719FF2A3B4A7000263B14 /* SearchView.swift */,
+				04DD3A3D2A3EF4B1001D549C /* Alert.swift */,
+				04DD3A3F2A3F6F9D001D549C /* Constants.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -190,6 +197,7 @@
 			children = (
 				04B6E97E2A3D6FB200734C49 /* App */,
 				040719D32A34D24F00263B14 /* Helpers */,
+				04DD3A3C2A3EF3EF001D549C /* Router */,
 				040719D22A34D24200263B14 /* Models */,
 				04B6E97B2A3D6E5700734C49 /* Sources */,
 				04B6E97D2A3D6EA400734C49 /* Resorces */,
@@ -236,6 +244,15 @@
 				046BE1D52A2FA995003882E4 /* Info.plist */,
 			);
 			path = App;
+			sourceTree = "<group>";
+		};
+		04DD3A3C2A3EF3EF001D549C /* Router */ = {
+			isa = PBXGroup;
+			children = (
+				04DD3A3A2A3E1ACA001D549C /* Router.swift */,
+				04DD3A382A3E10AB001D549C /* AssemblyModuleBuilder.swift */,
+			);
+			path = Router;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -315,6 +332,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				04B6E9782A3C9D6F00734C49 /* MatchesAndHeroesViewPresenter.swift in Sources */,
+				04DD3A402A3F6F9D001D549C /* Constants.swift in Sources */,
 				04071A092A3B90F800263B14 /* FavoritePlayers.xcdatamodeld in Sources */,
 				046BE1DC2A2FB17D003882E4 /* NetworkManager.swift in Sources */,
 				040719D82A34F77800263B14 /* MatchesTableViewCell.swift in Sources */,
@@ -325,7 +343,6 @@
 				04071A002A3B4A7000263B14 /* SearchView.swift in Sources */,
 				046BE1CC2A2FA97D003882E4 /* PlayersViewController.swift in Sources */,
 				040719E92A38FF5500263B14 /* MatchInfoView.swift in Sources */,
-				040719F12A39743000263B14 /* Item.swift in Sources */,
 				046BE1C82A2FA97D003882E4 /* AppDelegate.swift in Sources */,
 				04B6E9762A3C9D4C00734C49 /* MatchesAndHeroesViewController.swift in Sources */,
 				040719E62A38F39100263B14 /* ButtonTableViewCell.swift in Sources */,
@@ -336,13 +353,16 @@
 				040719D12A34D23700263B14 /* PlayerDetailViewController.swift in Sources */,
 				040719DA2A34F7B600263B14 /* FavoriteHeroTableViewCell.swift in Sources */,
 				04071A042A3B7C3300263B14 /* FavoritePlayersViewController.swift in Sources */,
+				04DD3A3B2A3E1ACA001D549C /* Router.swift in Sources */,
 				040719D52A34DA6C00263B14 /* PlayerDetailView.swift in Sources */,
+				04DD3A392A3E10AB001D549C /* AssemblyModuleBuilder.swift in Sources */,
 				040719DC2A3510AD00263B14 /* Match.swift in Sources */,
 				046BE1DE2A30E718003882E4 /* Player.swift in Sources */,
 				04071A062A3B8FDD00263B14 /* StorageManager.swift in Sources */,
 				046BE1CA2A2FA97D003882E4 /* SceneDelegate.swift in Sources */,
 				040719DE2A35986C00263B14 /* PlayerDetailPresenter.swift in Sources */,
 				040719E22A371BBC00263B14 /* TotalsTableViewCell.swift in Sources */,
+				04DD3A3E2A3EF4B1001D549C /* Alert.swift in Sources */,
 				040719FD2A3B478E00263B14 /* FavoritePlayersView.swift in Sources */,
 				046BE1E02A30F034003882E4 /* PlayersView.swift in Sources */,
 			);

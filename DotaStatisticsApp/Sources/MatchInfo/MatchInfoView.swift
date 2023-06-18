@@ -8,15 +8,25 @@
 import UIKit
 import SnapKit
 
-protocol MatchInfoViewProtocol {
+protocol MatchInfoViewProtocol: AnyObject {
     func set(match: Match)
     func set(itemsById: [String : String])
     func set(itemsByName: [String : Item])
+    func errorDownloadData()
 }
 
 final class MatchInfoView: UIView {
     var gameModes: [String : String] = [:]
     var heroes: [Hero] = []
+    var showAlert: (() -> Void)?
+    
+    private var dataCount = 0 {
+        didSet {
+            if dataCount == 3 {
+                stopActivityIndicator()
+            }
+        }
+    }
     private var match: Match? {
         didSet {
             tableView.reloadData()
@@ -34,13 +44,6 @@ final class MatchInfoView: UIView {
         didSet {
             tableView.reloadData()
             dataCount += 1
-        }
-    }
-    private var dataCount = 0 {
-        didSet {
-            if dataCount == 3 {
-                stopActivityIndicator()
-            }
         }
     }
     
@@ -65,23 +68,26 @@ final class MatchInfoView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    private func makeTableView() -> UITableView {
+}
+
+// MARK: - Private methods
+private extension MatchInfoView {
+    func makeTableView() -> UITableView {
         let tableView = UITableView()
         tableView.register(MatchInfoTableViewCell.self, forCellReuseIdentifier: MatchInfoTableViewCell.description())
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.rowHeight = 70
+        tableView.rowHeight = CGFloat(Constants.bigCellHeight)
         return tableView
     }
     
-    private func setupSubviews() {
-        self.backgroundColor = .white
+    func setupSubviews() {
+        self.backgroundColor = .systemBackground
         
         activityIndicator.hidesWhenStopped = true
         self.addSubview(activityIndicator)
         
-        generalInfoView.backgroundColor = .white
+        generalInfoView.backgroundColor = .systemBackground
         self.addSubview(generalInfoView)
         
         generalInfoView.addSubview(gameModeLabel)
@@ -92,16 +98,17 @@ final class MatchInfoView: UIView {
         generalInfoView.addSubview(direResultLabel)
         generalInfoView.addSubview(durationLabel)
         
+        tableView.backgroundColor = .systemBackground
         self.addSubview(tableView)
     }
     
-    private func setConstraints() {
+    func setConstraints() {
         activityIndicator.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
         
         generalInfoView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(UIScreen.main.bounds.size.height * 0.05)
+            make.top.equalToSuperview().offset(UIScreen.main.bounds.size.height * CGFloat(Constants.subviewOffsetMultiplier))
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(120)
         }
@@ -112,7 +119,7 @@ final class MatchInfoView: UIView {
         }
         
         scoreLabel.snp.makeConstraints { make in
-            make.top.equalTo(gameModeLabel.snp.bottom).offset(10)
+            make.top.equalTo(gameModeLabel.snp.bottom).offset(CGFloat(Constants.mediumConstraintOffset))
             make.centerX.equalToSuperview()
         }
         
@@ -122,7 +129,7 @@ final class MatchInfoView: UIView {
         }
         
         radiantResultLabel.snp.makeConstraints { make in
-            make.top.equalTo(radiantLabel.snp.bottom).offset(5)
+            make.top.equalTo(radiantLabel.snp.bottom).offset(CGFloat(Constants.smallConstraintOffset))
             make.centerX.equalTo(radiantLabel.snp.centerX)
         }
         
@@ -132,12 +139,12 @@ final class MatchInfoView: UIView {
         }
         
         direResultLabel.snp.makeConstraints { make in
-            make.top.equalTo(direLabel.snp.bottom).offset(5)
+            make.top.equalTo(direLabel.snp.bottom).offset(CGFloat(Constants.smallConstraintOffset))
             make.centerX.equalTo(direLabel.snp.centerX)
         }
         
         durationLabel.snp.makeConstraints { make in
-            make.top.equalTo(scoreLabel.snp.bottom).offset(25)
+            make.top.equalTo(scoreLabel.snp.bottom).offset(CGFloat(Constants.largeConstraintOffset))
             make.centerX.equalToSuperview()
         }
         
@@ -147,38 +154,41 @@ final class MatchInfoView: UIView {
         }
     }
     
-    private func startActivityIndicator() {
+    func startActivityIndicator() {
         activityIndicator.startAnimating()
         generalInfoView.isHidden = true
         tableView.isHidden = true
     }
     
-    private func stopActivityIndicator() {
-        activityIndicator.startAnimating()
-        generalInfoView.isHidden = false
-        tableView.isHidden = false
+    func stopActivityIndicator() {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.activityIndicator.startAnimating()
+            self.generalInfoView.isHidden = false
+            self.tableView.isHidden = false
+        }
     }
     
-    private func setGeneralInfo() {
+    func setGeneralInfo() {
         if let match = match {
             for (key, value) in gameModes {
                 if key == "\(match.game_mode)" {
                     gameModeLabel.text = value
                 }
             }
-            gameModeLabel.font = UIFont.systemFont(ofSize: 22)
+            gameModeLabel.font = UIFont.systemFont(ofSize: CGFloat(Constants.headerFontSize))
             
             scoreLabel.text = "\(match.radiant_score) : \(match.dire_score)"
-            scoreLabel.font = UIFont.boldSystemFont(ofSize: 22)
+            scoreLabel.font = UIFont.boldSystemFont(ofSize: CGFloat(Constants.headerFontSize))
             
             radiantLabel.text = "Свет"
-            radiantLabel.font = UIFont.systemFont(ofSize: 22)
+            radiantLabel.font = UIFont.systemFont(ofSize: CGFloat(Constants.headerFontSize))
             
             direLabel.text = "Тьма"
-            direLabel.font = UIFont.systemFont(ofSize: 22)
+            direLabel.font = UIFont.systemFont(ofSize: CGFloat(Constants.headerFontSize))
             
-            radiantResultLabel.font = UIFont.systemFont(ofSize: 16)
-            direResultLabel.font = UIFont.systemFont(ofSize: 16)
+            radiantResultLabel.font = UIFont.systemFont(ofSize: CGFloat(Constants.smallFontSize))
+            direResultLabel.font = UIFont.systemFont(ofSize: CGFloat(Constants.smallFontSize))
             if match.radiant_win {
                 radiantResultLabel.text = "Победа"
                 radiantResultLabel.textColor = .green
@@ -201,8 +211,8 @@ final class MatchInfoView: UIView {
             if "\(seconds)".count == 1 {
                 stringSec = "0\(seconds)"
             }
-            durationLabel.text = "\(stringMin):\(stringSec)"
-            durationLabel.font = UIFont.systemFont(ofSize: 18)
+            durationLabel.text = "Длительность: \(stringMin):\(stringSec)"
+            durationLabel.font = UIFont.systemFont(ofSize: CGFloat(Constants.mediumFontSize))
         }
     }
 }
@@ -229,7 +239,6 @@ extension MatchInfoView: UITableViewDataSource {
         } else {
             filteredPlayers = filteredPlayers?.filter({ !$0.isRadiant })
         }
-        
         
         if let player = filteredPlayers?[indexPath.row] {
             let items = [player.item_0, player.item_1, player.item_2, player.item_3, player.item_4, player.item_5]
@@ -290,5 +299,17 @@ extension MatchInfoView: MatchInfoViewProtocol {
     
     func set(itemsByName: [String : Item]) {
         self.itemsByName = itemsByName
+    }
+    
+    func errorDownloadData() {
+        DispatchQueue.global().async { [ weak self] in
+            guard let self = self else { return }
+            self.dataCount = 0
+            self.stopActivityIndicator()
+            DispatchQueue.main.async {
+                self.startActivityIndicator()
+                self.showAlert?()
+            }
+        }
     }
 }

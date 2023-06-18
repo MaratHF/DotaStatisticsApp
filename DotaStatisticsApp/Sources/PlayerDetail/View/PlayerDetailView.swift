@@ -7,23 +7,18 @@
 
 import UIKit
 
-protocol PlayerDetailViewProtocol {
+protocol PlayerDetailViewProtocol: AnyObject {
     func set(player: Player)
     func setMatches(with matches: [PlayerMatch])
     func setFavoriteHeroes(with heroes: [PlayersHero])
     func set(summary: Summary)
     func set(gameModes: [String : String])
     func set(heroes: [Hero])
-    func addError()
+    func set(favoritePlayers: [FavoritePlayer])
+    func errorDownloadData()
 }
 
 final class PlayerDetailView: UIView {
-    var errorHandler = 0 {
-        didSet {
-            showAlert?()
-            dataCount = 0
-        }
-    }
     var favoriteButton = UIButton()
     var deleteFavoritePlayer: ((FavoritePlayer) -> Void)?
     var createFavoritePlayer: ((Profile) -> Void)?
@@ -31,11 +26,28 @@ final class PlayerDetailView: UIView {
     var showAllElements: (([Hero], [String : String], [PlayerMatch], [PlayersHero]) -> Void)?
     var showAlert: (() -> Void)?
     
+    private let activityIndicator = UIActivityIndicatorView(style: .large)
+    private let profileView = UIView()
+    private let avatarImageView = UIImageView()
+    private let nickNameLabel = UILabel()
+    private let accountIdLabel = UILabel()
+    private lazy var tableView = makeTableView()
+    private var favoritePlayers: [FavoritePlayer] = [] 
     private var dataCount = 0 {
         didSet {
             if dataCount == 6 {
                 stopActivityIndicator()
             }
+        }
+    }
+    private var gameModes: [String : String] = [:] {
+        didSet {
+            dataCount += 1
+        }
+    }
+    private var heroes: [Hero] = [] {
+        didSet {
+            dataCount += 1
         }
     }
     private var player: Player? {
@@ -52,16 +64,10 @@ final class PlayerDetailView: UIView {
             dataCount += 1
         }
     }
-    private var gameModes: [String : String] = [:] 
+    
     private var favoriteHeroes: [PlayersHero] = [] {
         didSet {
             tableView.reloadSections(IndexSet(integer: 2), with: .none)
-            dataCount += 1
-        }
-    }
-    private var heroes: [Hero] = [] {
-        didSet {
-            tableView.reloadData()
             dataCount += 1
         }
     }
@@ -71,28 +77,21 @@ final class PlayerDetailView: UIView {
             dataCount += 1
         }
     }
-    private var favoritePlayers: [FavoritePlayer] = []
-    private let activityIndicator = UIActivityIndicatorView(style: .large)
-    private let profileView = UIView()
-    private let avatarImageView = UIImageView()
-    private let nickNameLabel = UILabel()
-    private let accountIdLabel = UILabel()
-    private lazy var tableView = makeTableView()
-//    private var activityIndicator = UIActivityIndicatorView(style: .medium)
     
     init() {
         super.init(frame: .zero)
         setupSubviews()
         setConstraints()
         startActivityIndicator()
-        fetchFavoritePlayers()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    private func makeTableView() -> UITableView {
+}
+// MARK: - Private methods
+private extension PlayerDetailView {
+    func makeTableView() -> UITableView {
         let tableView = UITableView()
         tableView.register(TotalsTableViewCell.self, forCellReuseIdentifier: TotalsTableViewCell.description())
         tableView.register(MatchesTableViewCell.self, forCellReuseIdentifier: MatchesTableViewCell.description())
@@ -103,59 +102,60 @@ final class PlayerDetailView: UIView {
         return tableView
     }
     
-    private func setupSubviews() {
-        self.backgroundColor = .white
+    func setupSubviews() {
+        self.backgroundColor = .systemBackground
         
         activityIndicator.hidesWhenStopped = true
         self.addSubview(activityIndicator)
         
-        profileView.backgroundColor = .white
+        profileView.backgroundColor = .systemBackground
         self.addSubview(profileView)
         
         avatarImageView.contentMode = .scaleToFill
         avatarImageView.clipsToBounds = true
-        avatarImageView.layer.cornerRadius = 10
+        avatarImageView.layer.cornerRadius = CGFloat(Constants.imageCornerRadius)
         avatarImageView.backgroundColor = .gray
         profileView.addSubview(avatarImageView)
         
-        nickNameLabel.font = UIFont.boldSystemFont(ofSize: 20)
+        nickNameLabel.font = UIFont.boldSystemFont(ofSize: CGFloat(Constants.largeFontSize))
         profileView.addSubview(nickNameLabel)
         
-        accountIdLabel.font = UIFont.systemFont(ofSize: 18)
+        accountIdLabel.font = UIFont.systemFont(ofSize: CGFloat(Constants.mediumFontSize))
         profileView.addSubview(accountIdLabel)
         
         favoriteButton.setTitle("", for: .normal)
         favoriteButton.setImage(UIImage(systemName: "star"), for: .normal)
         favoriteButton.addTarget(self, action: #selector(changeFavoriteStatus(_:)), for: .touchUpInside)
         
+        tableView.backgroundColor = .systemBackground
         self.addSubview(tableView)
     }
     
-    private func setConstraints() {
+    func setConstraints() {
         activityIndicator.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
         
         profileView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(UIScreen.main.bounds.size.height * 0.05)
+            make.top.equalToSuperview().offset(UIScreen.main.bounds.size.height * CGFloat(Constants.subviewOffsetMultiplier))
             make.trailing.leading.equalToSuperview()
             make.height.equalTo(110)
         }
         
         avatarImageView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalToSuperview().offset(5)
+            make.top.equalToSuperview().offset(CGFloat(Constants.smallConstraintOffset))
             make.height.width.equalTo(50)
         }
         
         nickNameLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(avatarImageView.snp.bottom).offset(5)
+            make.top.equalTo(avatarImageView.snp.bottom).offset(CGFloat(Constants.smallConstraintOffset))
         }
         
         accountIdLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(nickNameLabel.snp.bottom).offset(5)
+            make.top.equalTo(nickNameLabel.snp.bottom).offset(CGFloat(Constants.smallConstraintOffset))
         }
         
         tableView.snp.makeConstraints { make in
@@ -164,30 +164,22 @@ final class PlayerDetailView: UIView {
         }
     }
     
-    private func startActivityIndicator() {
+    func startActivityIndicator() {
         activityIndicator.startAnimating()
         profileView.isHidden = true
         tableView.isHidden = true
     }
     
-    private func stopActivityIndicator() {
-        activityIndicator.startAnimating()
-        profileView.isHidden = false
-        tableView.isHidden = false
-    }
-    
-    private func fetchFavoritePlayers() {
-        StorageManager.shared.fetchData { [weak self] result in
-            switch result {
-            case .success(let players):
-                self?.favoritePlayers = players
-            case .failure(let error):
-                print(error.localizedDescription)
-            }
+    func stopActivityIndicator() {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.activityIndicator.startAnimating()
+            self.profileView.isHidden = false
+            self.tableView.isHidden = false
         }
     }
     
-    private func setPlayerProfile(player: Player) {
+    func setPlayerProfile(player: Player) {
         NetworkManager.shared.fetchImage(from: player.profile.avatarfull) { [weak self] imageData in
             self?.avatarImageView.image = UIImage(data: imageData)
         }
@@ -200,7 +192,7 @@ final class PlayerDetailView: UIView {
         }
     }
     
-    @objc private func changeFavoriteStatus(_: UIButton) {
+    @objc func changeFavoriteStatus(_: UIButton) {
         if let player = favoritePlayers.filter({ $0.accountId == player?.profile.account_id ?? 0 }).last {
             favoriteButton.setImage(UIImage(systemName: "star"), for: .normal)
             deleteFavoritePlayer?(player)
@@ -212,7 +204,6 @@ final class PlayerDetailView: UIView {
         }
     }
 }
-
 //MARK: - Table view data source
 extension PlayerDetailView: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -251,7 +242,7 @@ extension PlayerDetailView: UITableViewDataSource {
         } else if indexPath.section == 1 {
             if indexPath.row == 6 || indexPath.row == matches.count {
                 guard let buttonCell = tableView.dequeueReusableCell(withIdentifier: ButtonTableViewCell.description(), for: indexPath) as? ButtonTableViewCell else { return UITableViewCell()}
-                buttonCell.setLabelText(with: "Показать все матчи")
+                buttonCell.setLabelText(with: "Показать больше матчей")
                 return buttonCell
             }
             
@@ -343,15 +334,15 @@ extension PlayerDetailView: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.section == 1 {
             if indexPath.row == 0 || indexPath.row == 6 || indexPath.row == matches.count + 1 {
-                return 40
+                return CGFloat(Constants.smallCellHeight)
             } else {
-                return 70
+                return CGFloat(Constants.bigCellHeight)
             }
         } else if indexPath.section == 2 {
             if indexPath.row == 0 || indexPath.row == 6 {
-                return 40
+                return CGFloat(Constants.smallCellHeight)
             } else {
-                return 70
+                return CGFloat(Constants.bigCellHeight)
             }
         }
         return 70
@@ -359,12 +350,12 @@ extension PlayerDetailView: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let view = UIView()
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
         let headerLabel = UILabel()
-        headerLabel.font = UIFont.systemFont(ofSize: 22)
+        headerLabel.font = UIFont.systemFont(ofSize: CGFloat(Constants.headerFontSize))
         view.addSubview(headerLabel)
         headerLabel.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(10)
+            make.leading.equalToSuperview().offset(CGFloat(Constants.mediumConstraintOffset))
             make.centerY.equalToSuperview()
         }
         
@@ -404,7 +395,18 @@ extension PlayerDetailView: PlayerDetailViewProtocol {
         self.heroes = heroes
     }
     
-    func addError() {
-        errorHandler += 1
+    func set(favoritePlayers: [FavoritePlayer]) {
+        self.favoritePlayers = favoritePlayers
+    }
+    
+    func errorDownloadData() {
+        DispatchQueue.global().async {
+            self.dataCount = 0
+            self.stopActivityIndicator()
+            DispatchQueue.main.async {
+                self.showAlert?()
+                self.startActivityIndicator()
+            }
+        }
     }
 }

@@ -6,8 +6,9 @@
 //
 
 import UIKit
+import CloudKit
 
-class PlayersViewController: UIViewController {
+final class PlayersViewController: UIViewController {
     
     private let playersView = PlayersView()
     private let presenter: PlayersPresenterProtocol
@@ -28,16 +29,20 @@ class PlayersViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        title = "Поиск игроков"
+        navigationItem.backButtonTitle = "Назад"
+        setViewHandlers()
+    }
+    
+    private func setViewHandlers() {
         playersView.searchBarActionHandler = { [weak self] text in
-            if let self = self {
-                self.presenter.updatePlayers(withName: text, forUi: self.playersView)
-            }
+            guard let self = self else { return }
+            self.presenter.updatePlayers(withName: text, forUi: self.playersView)
         }
         
         playersView.cellTappedHandler = { [weak self] id in
-            let presenter = PlayerDetailPresenter(playerId: id)
-            let playerDetailVC = PlayerDetailViewController(presenter: presenter, id: id)
-            self?.navigationController?.pushViewController(playerDetailVC, animated: true)
+            guard let self = self else { return }
+            self.presenter.cellTapped(id: id)
         }
     }
 }

@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol MatchesAndHeroesViewProtocol {
+protocol MatchesAndHeroesViewProtocol: AnyObject {
     func set(matches: [PlayerMatch], andHeroes heroes: [PlayersHero])
 }
 
@@ -39,7 +39,8 @@ final class MatchesAndHeroesView: UIView {
     }
     
     private func setTableView() {
-        tableView.rowHeight = 70
+        tableView.backgroundColor = .systemBackground
+        tableView.rowHeight = CGFloat(Constants.bigCellHeight)
         self.addSubview(tableView)
         
         tableView.snp.makeConstraints { make in
@@ -92,7 +93,6 @@ extension MatchesAndHeroesView: UITableViewDelegate, UITableViewDataSource {
                     as? FavoriteHeroTableViewCell else { return UITableViewCell() }
             
             cell.selectionStyle = .none
-            
             let hero = allHeroes.filter({ "\($0.id)" == heroes[indexPath.row].hero_id }).last
             cell.configure(
                 imagePath: hero?.img ?? "",

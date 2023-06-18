@@ -32,17 +32,17 @@ final class MatchInfoTableViewCell: UITableViewCell {
     private func setupSubviews() {
         heroImageView.contentMode = .scaleToFill
         heroImageView.clipsToBounds = true
-        heroImageView.layer.cornerRadius = 10
+        heroImageView.layer.cornerRadius = CGFloat(Constants.imageCornerRadius)
         heroImageView.backgroundColor = .gray
         contentView.addSubview(heroImageView)
         
-        playerNameLabel.font = UIFont.systemFont(ofSize: 18)
+        playerNameLabel.font = UIFont.systemFont(ofSize: CGFloat(Constants.mediumFontSize))
         contentView.addSubview(playerNameLabel)
         
-        kdaLabel.font = UIFont.systemFont(ofSize: 14)
+        kdaLabel.font = UIFont.systemFont(ofSize: CGFloat(Constants.smallFontSize))
         contentView.addSubview(kdaLabel)
         
-        goldLabel.font = UIFont.systemFont(ofSize: 14)
+        goldLabel.font = UIFont.systemFont(ofSize: CGFloat(Constants.smallFontSize))
         contentView.addSubview(goldLabel)
         
         itemOneImageView.contentMode = .scaleToFill
@@ -72,68 +72,68 @@ final class MatchInfoTableViewCell: UITableViewCell {
     
     private func setConstraints() {
         heroImageView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(10)
-            make.bottom.equalToSuperview().inset(10)
+            make.leading.equalToSuperview().offset(CGFloat(Constants.mediumConstraintOffset))
+            make.bottom.equalToSuperview().inset(CGFloat(Constants.mediumConstraintOffset))
             make.width.equalTo(60)
             make.height.equalTo(40)
         }
         
         kdaLabel.snp.makeConstraints { make in
             make.bottom.equalTo(heroImageView.snp.bottom)
-            make.leading.equalTo(heroImageView.snp.trailing).offset(10)
+            make.leading.equalTo(heroImageView.snp.trailing).offset(CGFloat(Constants.mediumConstraintOffset))
         }
         
         playerNameLabel.snp.makeConstraints { make in
             make.top.equalTo(heroImageView.snp.top)
-            make.leading.equalTo(heroImageView.snp.trailing).offset(10)
+            make.leading.equalTo(heroImageView.snp.trailing).offset(CGFloat(Constants.mediumConstraintOffset))
             make.width.equalTo(180)
         }
         
         goldLabel.snp.makeConstraints { make in
             make.bottom.equalTo(heroImageView.snp.bottom)
-            make.leading.equalTo(kdaLabel.snp.trailing).offset(10)
+            make.leading.equalTo(kdaLabel.snp.trailing).offset(CGFloat(Constants.mediumConstraintOffset))
         }
         
         itemOneImageView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(15)
             make.trailing.equalToSuperview().inset(85)
-            make.height.equalTo(20)
-            make.width.equalTo(30)
+            make.height.equalTo(CGFloat(Constants.itemImageHeight))
+            make.width.equalTo(CGFloat(Constants.itemImageWidth))
         }
 
         itemTwoImageView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(15)
             make.trailing.equalToSuperview().inset(45)
-            make.height.equalTo(20)
-            make.width.equalTo(30)
+            make.height.equalTo(CGFloat(Constants.itemImageHeight))
+            make.width.equalTo(CGFloat(Constants.itemImageWidth))
         }
 
         itemThreeImageView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(15)
-            make.trailing.equalToSuperview().inset(10)
-            make.height.equalTo(20)
-            make.width.equalTo(30)
+            make.trailing.equalToSuperview().inset(CGFloat(Constants.mediumConstraintOffset))
+            make.height.equalTo(CGFloat(Constants.itemImageHeight))
+            make.width.equalTo(CGFloat(Constants.itemImageWidth))
         }
 
         itemFourImageView.snp.makeConstraints { make in
-            make.bottom.equalToSuperview().inset(10)
+            make.bottom.equalToSuperview().inset(CGFloat(Constants.mediumConstraintOffset))
             make.trailing.equalToSuperview().inset(85)
-            make.height.equalTo(20)
-            make.width.equalTo(30)
+            make.height.equalTo(CGFloat(Constants.itemImageHeight))
+            make.width.equalTo(CGFloat(Constants.itemImageWidth))
         }
         
         itemFiveImageView.snp.makeConstraints { make in
-            make.bottom.equalToSuperview().inset(10)
+            make.bottom.equalToSuperview().inset(CGFloat(Constants.mediumConstraintOffset))
             make.trailing.equalToSuperview().inset(45)
-            make.height.equalTo(20)
-            make.width.equalTo(30)
+            make.height.equalTo(CGFloat(Constants.itemImageHeight))
+            make.width.equalTo(CGFloat(Constants.itemImageWidth))
         }
         
         itemSixImageView.snp.makeConstraints { make in
-            make.bottom.equalToSuperview().inset(10)
-            make.trailing.equalToSuperview().inset(10)
-            make.height.equalTo(20)
-            make.width.equalTo(30)
+            make.bottom.equalToSuperview().inset(CGFloat(Constants.mediumConstraintOffset))
+            make.trailing.equalToSuperview().inset(CGFloat(Constants.mediumConstraintOffset))
+            make.height.equalTo(CGFloat(Constants.itemImageHeight))
+            make.width.equalTo(CGFloat(Constants.itemImageWidth))
         }
     }
     

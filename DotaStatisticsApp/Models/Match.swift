@@ -39,3 +39,7 @@ struct MatchPlayer: Decodable {
 struct GameMode: Decodable {
     let name: String
 }
+
+struct Item: Decodable {
+    let img: String
+}

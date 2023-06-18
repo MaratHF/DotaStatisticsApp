@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 
 final class MatchesTableViewCell: UITableViewCell {
-    
+    var fetchImage: (() -> Void)?
     private var heroImageView = UIImageView()
     private var winLoseImageView = UIImageView()
     private var gameModeLabel = UILabel()
@@ -33,7 +33,7 @@ final class MatchesTableViewCell: UITableViewCell {
     private func setupSubviews() {
         heroImageView.contentMode = .scaleToFill
         heroImageView.clipsToBounds = true
-        heroImageView.layer.cornerRadius = 10
+        heroImageView.layer.cornerRadius = CGFloat(Constants.imageCornerRadius)
         heroImageView.backgroundColor = .gray
         contentView.addSubview(heroImageView)
         
@@ -41,13 +41,13 @@ final class MatchesTableViewCell: UITableViewCell {
         winLoseImageView.layer.cornerRadius = 2
         contentView.addSubview(winLoseImageView)
         
-        gameModeLabel.font = UIFont.systemFont(ofSize: 20)
+        gameModeLabel.font = UIFont.systemFont(ofSize: CGFloat(Constants.largeFontSize))
         contentView.addSubview(gameModeLabel)
         
-        playedTimeLabel.font = UIFont.systemFont(ofSize: 16)
+        playedTimeLabel.font = UIFont.systemFont(ofSize: CGFloat(Constants.smallFontSize))
         contentView.addSubview(playedTimeLabel)
         
-        kdaLabel.font = UIFont.systemFont(ofSize: 20)
+        kdaLabel.font = UIFont.systemFont(ofSize: CGFloat(Constants.largeFontSize))
         kdaLabel.textAlignment = .center
         contentView.addSubview(kdaLabel)
         
@@ -66,7 +66,7 @@ final class MatchesTableViewCell: UITableViewCell {
     
     private func setConstraints() {
         heroImageView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(10)
+            make.leading.equalToSuperview().offset(CGFloat(Constants.mediumConstraintOffset))
             make.centerY.equalToSuperview()
             make.width.equalTo(60)
             make.height.equalTo(40)
@@ -78,7 +78,7 @@ final class MatchesTableViewCell: UITableViewCell {
         }
         
         winLoseImageView.snp.makeConstraints { make in
-            make.leading.equalTo(heroImageView.snp.trailing).offset(20)
+            make.leading.equalTo(heroImageView.snp.trailing).offset(CGFloat(Constants.bigConstraintOffset))
             make.centerY.equalToSuperview()
             make.height.width.equalTo(30)
         }
@@ -89,12 +89,12 @@ final class MatchesTableViewCell: UITableViewCell {
         }
         
         gameModeLabel.snp.makeConstraints { make in
-            make.leading.equalTo(winLoseImageView.snp.trailing).offset(30)
+            make.leading.equalTo(winLoseImageView.snp.trailing).offset(CGFloat(Constants.largeConstraintOffset))
             make.top.equalTo(heroImageView.snp.top)
         }
         
         playedTimeLabel.snp.makeConstraints { make in
-            make.leading.equalTo(winLoseImageView.snp.trailing).offset(30)
+            make.leading.equalTo(winLoseImageView.snp.trailing).offset(CGFloat(Constants.largeConstraintOffset))
             make.bottom.equalTo(heroImageView.snp.bottom)
         }
         
@@ -124,7 +124,7 @@ final class MatchesTableViewCell: UITableViewCell {
     func configure(imagePath path: String, isWin: Bool, gameMode: String, kills: Int, deaths: Int, assists: Int, playedTime: Int) {
         let url = "https://cdn.cloudflare.steamstatic.com" + path
         NetworkManager.shared.fetchImage(from: url) {[weak self] imageData in
-            self?.heroImageView.image = UIImage(data: imageData)
+            self?.heroImageView.image = UIImage(data: imageData) ?? UIImage(named: "win")
         }
         gameModeLabel.text = gameMode
         winLoseImageView.image = isWin ? UIImage(named: "win") : UIImage(named: "lose")

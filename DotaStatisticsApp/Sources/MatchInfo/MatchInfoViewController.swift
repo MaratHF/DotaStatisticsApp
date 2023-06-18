@@ -10,11 +10,14 @@ import UIKit
 final class MatchInfoViewController: UIViewController {
     var heroes: [Hero] = []
     var gameModes: [String : String] = [:]
+    
+    private let matchId: Int
     private let matchInfoView = MatchInfoView()
     private let presenter: MatchInfoPresenter
     
-    init(presenter: MatchInfoPresenter) {
+    init(presenter: MatchInfoPresenter, matchId: Int) {
         self.presenter = presenter
+        self.matchId = matchId
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -33,5 +36,15 @@ final class MatchInfoViewController: UIViewController {
         presenter.viewDidLoad(ui: matchInfoView)
         matchInfoView.gameModes = gameModes
         matchInfoView.heroes = heroes
+        
+        matchInfoView.showAlert = { [weak self] in
+            guard let self = self else { return }
+            let alert = Alert.createAlert { _ in
+                self.presenter.reloadData(matchId: self.matchId)
+            } cancelAction: { _ in
+                self.presenter.popToBackVC()
+            }
+            self.present(alert, animated: true)
+        }
     }
 }

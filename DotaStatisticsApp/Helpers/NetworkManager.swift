@@ -39,19 +39,6 @@ final class NetworkManager {
     
     private init() {}
     
-    func createAlert(repeatHandler: @escaping (UIAlertAction) -> Void, cancelAction: @escaping (UIAlertAction) -> Void) -> UIAlertController {
-        let alert = UIAlertController(
-            title: "Не удалось загрузить данные",
-            message: "Повторить попытку загрузки?",
-            preferredStyle: .alert
-        )
-        let repeatAction = UIAlertAction(title: "Повторить", style: .default, handler: repeatHandler)
-        alert.addAction(repeatAction)
-        let cancelAction = UIAlertAction(title: "Закрыть", style: .cancel, handler: cancelAction)
-        alert.addAction(cancelAction)
-        return alert
-    }
-    
     func fetch<T: Decodable>(dataType: T.Type, from url: URL?, completion: @escaping(Result<T, NetworkError>) -> Void) {
         guard let url = url else {
             completion(.failure(.invalidURL))
@@ -70,16 +57,8 @@ final class NetworkManager {
                     DispatchQueue.main.async {
                         completion(.success(type))
                     }
-                } catch DecodingError.keyNotFound(let key, let context) {
-                    Swift.print("could not find key \(key) in JSON: \(context.debugDescription)")
-                } catch DecodingError.valueNotFound(let type, let context) {
-                    Swift.print("could not find type \(type) in JSON: \(context.debugDescription)")
-                } catch DecodingError.typeMismatch(let type, let context) {
-                    Swift.print("type mismatch for type \(type) in JSON: \(context.debugDescription)")
-                } catch DecodingError.dataCorrupted(let context) {
-                    Swift.print("data found to be corrupted in JSON: \(context.debugDescription)")
-                } catch let error as NSError {
-                    NSLog("Error in read(from:ofType:) domain= \(error.domain), description= \(error.localizedDescription)")
+                } catch {
+                    completion(.failure(NetworkError.decodingError))
                 }
             } else {
                 completion(.failure(NetworkError.noData))

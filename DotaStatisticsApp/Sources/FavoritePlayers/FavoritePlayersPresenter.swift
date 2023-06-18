@@ -10,18 +10,21 @@ import Foundation
 protocol FavoritePlayersPresenterProtocol: AnyObject {
     func viewDidLoad(ui: FavoritePlayersViewProtocol)
     func setFavoritePlayers(forUi  ui: FavoritePlayersViewProtocol)
+    func searchBarTapped()
+    func cellTapped(id: Int)
 }
 
 final class FavoritePlayersPresenter {
     private var ui: FavoritePlayersViewProtocol?
+    private var router: RouterProtocol?
     private var favoritePlayers: [Profile] = [] {
         didSet {
             ui?.set(favoritePlayers: favoritePlayers)
         }
     }
     
-    init(favoritePlayers: [Profile]) {
-        self.favoritePlayers = favoritePlayers
+    init(router: RouterProtocol) {
+        self.router = router
     }
     
     private func fetchPlayers() {
@@ -44,6 +47,14 @@ final class FavoritePlayersPresenter {
 }
 
 extension FavoritePlayersPresenter: FavoritePlayersPresenterProtocol {
+    func searchBarTapped() {
+        router?.showPlayers()
+    }
+    
+    func cellTapped(id: Int) {
+        router?.showPlayerDetail(id: id)
+    }
+    
     func viewDidLoad(ui: FavoritePlayersViewProtocol) {
         self.ui = ui
     }

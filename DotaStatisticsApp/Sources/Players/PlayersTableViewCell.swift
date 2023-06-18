@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-class PlayersTableViewCell: UITableViewCell {
+final class PlayersTableViewCell: UITableViewCell {
     
     private var playerImageView = UIImageView()
     private var nameLabel = UILabel()
@@ -27,34 +27,34 @@ class PlayersTableViewCell: UITableViewCell {
     private func setupSubviews() {
         playerImageView.contentMode = .scaleAspectFit
         playerImageView.clipsToBounds = true
-        playerImageView.layer.cornerRadius = 10
+        playerImageView.layer.cornerRadius = CGFloat(Constants.imageCornerRadius)
         playerImageView.backgroundColor = .gray
         contentView.addSubview(playerImageView)
         
-        nameLabel.font = UIFont.boldSystemFont(ofSize: 20)
+        nameLabel.font = UIFont.boldSystemFont(ofSize: CGFloat(Constants.largeFontSize))
         contentView.addSubview(nameLabel)
         
-        idLabel.font = UIFont.systemFont(ofSize: 18)
+        idLabel.font = UIFont.systemFont(ofSize: CGFloat(Constants.mediumFontSize))
         contentView.addSubview(idLabel)
     }
     
     private func setConstraints() {
         playerImageView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(5)
+            make.leading.equalToSuperview().offset(CGFloat(Constants.smallConstraintOffset))
             make.centerY.equalToSuperview()
             make.width.height.equalTo(60)
         }
         
         nameLabel.snp.makeConstraints { make in
-            make.leading.equalTo(playerImageView.snp.trailing).offset(10)
-            make.top.trailing.equalToSuperview().offset(5)
+            make.leading.equalTo(playerImageView.snp.trailing).offset(CGFloat(Constants.mediumConstraintOffset))
+            make.top.trailing.equalToSuperview().offset(CGFloat(Constants.smallConstraintOffset))
             
         }
         
         idLabel.snp.makeConstraints { make in
-            make.leading.equalTo(playerImageView.snp.trailing).offset(10)
-            make.top.equalTo(nameLabel.snp.bottom).offset(5)
-            make.trailing.equalToSuperview().offset(5)
+            make.leading.equalTo(playerImageView.snp.trailing).offset(CGFloat(Constants.mediumConstraintOffset))
+            make.top.equalTo(nameLabel.snp.bottom).offset(CGFloat(Constants.smallConstraintOffset))
+            make.trailing.equalToSuperview().offset(CGFloat(Constants.smallConstraintOffset))
         }
     }
     

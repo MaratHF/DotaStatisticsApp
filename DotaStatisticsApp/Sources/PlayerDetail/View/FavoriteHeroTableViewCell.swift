@@ -28,83 +28,6 @@ final class FavoriteHeroTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func setupSubviews() {
-        heroImageView.contentMode = .scaleToFill
-        heroImageView.clipsToBounds = true
-        heroImageView.layer.cornerRadius = 10
-        heroImageView.backgroundColor = .gray
-        contentView.addSubview(heroImageView)
-        
-        heroNameLabel.font = UIFont.systemFont(ofSize: 20)
-        contentView.addSubview(heroNameLabel)
-        
-        lastPlayedLabel.font = UIFont.systemFont(ofSize: 14)
-        lastPlayedLabel.numberOfLines = 0
-        contentView.addSubview(lastPlayedLabel)
-        
-        picksLabel.font = UIFont.systemFont(ofSize: 20)
-        contentView.addSubview(picksLabel)
-        
-        winsLabel.font = UIFont.systemFont(ofSize: 20)
-        contentView.addSubview(winsLabel)
-        
-        headerOne.text = "Герои"
-        headerOne.isHidden = true
-        contentView.addSubview(headerOne)
-        
-        headerTwo.text = "Игр"
-        headerTwo.isHidden = true
-        contentView.addSubview(headerTwo)
-        
-        headerThree.text = "Побед"
-        headerThree.isHidden = true
-        contentView.addSubview(headerThree)
-    }
-    
-    private func setConstraints() {
-        heroImageView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(10)
-            make.centerY.equalToSuperview()
-            make.width.equalTo(60)
-            make.height.equalTo(40)
-        }
-        
-        headerOne.snp.makeConstraints { make in
-            make.leading.equalTo(heroImageView.snp.leading)
-            make.centerY.equalToSuperview()
-        }
-        
-        heroNameLabel.snp.makeConstraints { make in
-            make.leading.equalTo(heroImageView.snp.trailing).offset(20)
-            make.top.equalToSuperview().offset(10)
-        }
-        
-        lastPlayedLabel.snp.makeConstraints { make in
-            make.leading.equalTo(heroImageView.snp.trailing).offset(20)
-            make.top.equalTo(heroNameLabel.snp.bottom).offset(5)
-        }
-        
-        picksLabel.snp.makeConstraints { make in
-            make.leading.equalTo(heroImageView.snp.trailing).offset(210)
-            make.centerY.equalToSuperview()
-        }
-        
-        headerTwo.snp.makeConstraints { make in
-            make.leading.equalTo(picksLabel.snp.leading)
-            make.centerY.equalToSuperview()
-        }
-        
-        winsLabel.snp.makeConstraints { make in
-            make.leading.equalTo(heroImageView.snp.trailing).offset(280)
-            make.centerY.equalToSuperview()
-        }
-        
-        headerThree.snp.makeConstraints { make in
-            make.leading.equalTo(winsLabel.snp.leading)
-            make.centerY.equalToSuperview()
-        }
-    }
-    
     func configureCellHeaders() {
         heroImageView.isHidden = true
         heroNameLabel.isHidden = true
@@ -147,6 +70,83 @@ final class FavoriteHeroTableViewCell: UITableViewCell {
             lastPlayedLabel.text = """
 \(hours) часов назад
 """
+        }
+    }
+    
+    private func setupSubviews() {
+        heroImageView.contentMode = .scaleToFill
+        heroImageView.clipsToBounds = true
+        heroImageView.layer.cornerRadius = CGFloat(Constants.imageCornerRadius)
+        heroImageView.backgroundColor = .gray
+        contentView.addSubview(heroImageView)
+        
+        heroNameLabel.font = UIFont.systemFont(ofSize: CGFloat(Constants.largeFontSize))
+        contentView.addSubview(heroNameLabel)
+        
+        lastPlayedLabel.font = UIFont.systemFont(ofSize: CGFloat(Constants.smallFontSize))
+        lastPlayedLabel.numberOfLines = 0
+        contentView.addSubview(lastPlayedLabel)
+        
+        picksLabel.font = UIFont.systemFont(ofSize: CGFloat(Constants.largeFontSize))
+        contentView.addSubview(picksLabel)
+        
+        winsLabel.font = UIFont.systemFont(ofSize: CGFloat(Constants.largeFontSize))
+        contentView.addSubview(winsLabel)
+        
+        headerOne.text = "Герои"
+        headerOne.isHidden = true
+        contentView.addSubview(headerOne)
+        
+        headerTwo.text = "Игр"
+        headerTwo.isHidden = true
+        contentView.addSubview(headerTwo)
+        
+        headerThree.text = "Побед"
+        headerThree.isHidden = true
+        contentView.addSubview(headerThree)
+    }
+    
+    private func setConstraints() {
+        heroImageView.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(CGFloat(Constants.mediumConstraintOffset))
+            make.centerY.equalToSuperview()
+            make.width.equalTo(60)
+            make.height.equalTo(40)
+        }
+        
+        headerOne.snp.makeConstraints { make in
+            make.leading.equalTo(heroImageView.snp.leading)
+            make.centerY.equalToSuperview()
+        }
+        
+        heroNameLabel.snp.makeConstraints { make in
+            make.leading.equalTo(heroImageView.snp.trailing).offset(CGFloat(Constants.bigConstraintOffset))
+            make.top.equalToSuperview().offset(10)
+        }
+        
+        lastPlayedLabel.snp.makeConstraints { make in
+            make.leading.equalTo(heroImageView.snp.trailing).offset(CGFloat(Constants.bigConstraintOffset))
+            make.top.equalTo(heroNameLabel.snp.bottom).offset(5)
+        }
+        
+        picksLabel.snp.makeConstraints { make in
+            make.leading.equalTo(heroImageView.snp.trailing).offset(210)
+            make.centerY.equalToSuperview()
+        }
+        
+        headerTwo.snp.makeConstraints { make in
+            make.leading.equalTo(picksLabel.snp.leading)
+            make.centerY.equalToSuperview()
+        }
+        
+        winsLabel.snp.makeConstraints { make in
+            make.leading.equalTo(heroImageView.snp.trailing).offset(280)
+            make.centerY.equalToSuperview()
+        }
+        
+        headerThree.snp.makeConstraints { make in
+            make.leading.equalTo(winsLabel.snp.leading)
+            make.centerY.equalToSuperview()
         }
     }
 }

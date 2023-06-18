@@ -7,28 +7,35 @@
 
 import Foundation
 
-protocol PlayerDetailPresenterProtocol {
+protocol PlayerDetailPresenterProtocol: AnyObject {
     func viewDidLoad(ui: PlayerDetailViewProtocol)
     func reloadData(playerId: Int)
     func deletePlayerFromFavorites(player: FavoritePlayer)
     func addPlayerToFavorites(player: Profile)
+    func cellTapped(heroes: [Hero], gameModes: [String : String], id: Int)
+    func buttonCellTapped(allHeroes: [Hero], gameModes: [String:String], matches: [PlayerMatch], heroes: [PlayersHero])
+    func popToBackVC()
 }
 
 final class PlayerDetailPresenter {
     private var ui: PlayerDetailViewProtocol?
-    
+    private var router: RouterProtocol?
+    private var summaryCount = 0
     private var summary: Summary = Summary() {
         didSet {
-            ui?.set(summary: summary)
+            if summaryCount == 4 {
+                ui?.set(summary: summary)
+            }
         }
     }
     
-    init(playerId: Int) {
+    init(playerId: Int, router: RouterProtocol) {
+        self.router = router
+        fetchHeroes()
+        fetchGameMode()
         fetchPlayer(playerId: playerId)
         fetchPlayerTotals(playerId: playerId)
         fetchWinLose(playerId: playerId)
-        fetchHeroes()
-        fetchGameMode()
         fetchMatches(forPlayerId: playerId)
         fetchFavoriteHeroes(playerId: playerId)
     }
@@ -36,6 +43,7 @@ final class PlayerDetailPresenter {
     private func fetchGameMode() {
         let url = URL(string: UrlPath.baseUrl.rawValue + UrlPath.gameModePath.rawValue)
         NetworkManager.shared.fetch(dataType: [String : GameMode].self, from: url) { [weak self] result in
+            guard let self = self else { return }
             switch result {
             case .success(let gameModes):
                 var dict: [String : String] = [:]
@@ -48,9 +56,10 @@ final class PlayerDetailPresenter {
                     }
                     dict[key] = name
                 }
-                self?.ui?.set(gameModes: dict)
+                self.ui?.set(gameModes: dict)
             case .failure(_):
-                self?.ui?.addError()
+                self.summaryCount = 0
+                self.ui?.errorDownloadData()
             }
         }
     }
@@ -59,12 +68,14 @@ final class PlayerDetailPresenter {
         let url = URL(string: UrlPath.baseUrl.rawValue + UrlPath.playerIdPath.rawValue + "\(playerId)" + UrlPath.favoriteHeroesPath.rawValue)
         
         NetworkManager.shared.fetch(dataType: [PlayersHero].self, from: url) { [weak self] result in
+            guard let self = self else { return }
             switch result {
             case .success(let heroes):
                 let favoriteHeroes = heroes.sorted(by: { $0.games > $1.games })
-                self?.ui?.setFavoriteHeroes(with: favoriteHeroes)
-            case .failure(let error):
-                print(error.localizedDescription)
+                self.ui?.setFavoriteHeroes(with: favoriteHeroes)
+            case .failure(_):
+                self.summaryCount = 0
+                self.ui?.errorDownloadData()
             }
         }
     }
@@ -72,11 +83,14 @@ final class PlayerDetailPresenter {
     private func fetchWinLose(playerId: Int) {
         let url = URL(string: UrlPath.baseUrl.rawValue + UrlPath.playerIdPath.rawValue + "\(playerId)" + UrlPath.winLosePath.rawValue)
         NetworkManager.shared.fetch(dataType: WinLose.self, from: url) { [weak self] result in
+            guard let self = self else { return }
             switch result {
             case .success(let winLose):
-                self?.summary.winLose = winLose
-            case .failure(let error):
-                print(error.localizedDescription)
+                self.summaryCount += 1
+                self.summary.winLose = winLose
+            case .failure(_):
+                self.summaryCount = 0
+                self.ui?.errorDownloadData()
             }
         }
     }
@@ -84,11 +98,14 @@ final class PlayerDetailPresenter {
     private func fetchPlayerTotals(playerId: Int) {
         let url = URL(string: UrlPath.baseUrl.rawValue + UrlPath.playerIdPath.rawValue + "\(playerId)" + UrlPath.totalsPath.rawValue)
         NetworkManager.shared.fetch(dataType: [PlayerTotals].self, from: url) { [weak self] result in
+            guard let self = self else { return }
             switch result {
             case .success(let totals):
-                self?.summary.playerTotals = totals
-            case .failure(let error):
-                print(error.localizedDescription)
+                self.summaryCount += 1
+                self.summary.playerTotals = totals
+            case .failure(_):
+                self.summaryCount = 0
+                self.ui?.errorDownloadData()
             }
         }
     }
@@ -96,12 +113,15 @@ final class PlayerDetailPresenter {
     private func fetchPlayer(playerId: Int) {
         let url = URL(string: UrlPath.baseUrl.rawValue + UrlPath.playerIdPath.rawValue + "\(playerId)")
         NetworkManager.shared.fetch(dataType: Player.self, from: url) { [weak self] result in
+            guard let self = self else { return }
             switch result {
             case .success(let player):
-                self?.summary.rankTier = player.rank_tier
-                self?.ui?.set(player: player)
-            case .failure(let error):
-                print(error.localizedDescription)
+                self.summaryCount += 1
+                self.summary.rankTier = player.rank_tier
+                self.ui?.set(player: player)
+            case .failure(_):
+                self.summaryCount = 0
+                self.ui?.errorDownloadData()
             }
         }
     }
@@ -112,6 +132,7 @@ final class PlayerDetailPresenter {
             if let self = self {
                 switch result {
                 case .success(let matches):
+                    self.summaryCount += 1
                     self.summary.matchesCount = matches.count
                     
                     var recentMatches: [PlayerMatch] = []
@@ -121,9 +142,9 @@ final class PlayerDetailPresenter {
                         }
                     }
                     self.ui?.setMatches(with: recentMatches)
-                    self.fetchGameMode()
-                case .failure(let error):
-                    print(error.localizedDescription)
+                case .failure(_):
+                    self.summaryCount = 0
+                    self.ui?.errorDownloadData()
                 }
             }
         }
@@ -132,31 +153,45 @@ final class PlayerDetailPresenter {
     private func fetchHeroes() {
         let url = URL(string: UrlPath.baseUrl.rawValue + UrlPath.allHeroesPath.rawValue)
         NetworkManager.shared.fetch(dataType: [Hero].self, from: url) { [weak self] result in
+            guard let self = self else { return }
             switch result {
             case .success(let heroes):
-                self?.ui?.set(heroes: heroes)
+                self.ui?.set(heroes: heroes)
+            case .failure(_):
+                self.summaryCount = 0
+                self.ui?.errorDownloadData()
+            }
+        }
+    }
+    
+    private func fetchFavoritesPlayers() {
+        StorageManager.shared.fetchData { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let players):
+                self.ui?.set(favoritePlayers: players)
             case .failure(let error):
                 print(error.localizedDescription)
             }
         }
     }
-    
-    
 }
 
 extension PlayerDetailPresenter: PlayerDetailPresenterProtocol {
     func reloadData(playerId: Int) {
+        fetchHeroes()
+        fetchGameMode()
+        fetchFavoritesPlayers()
         fetchPlayer(playerId: playerId)
         fetchPlayerTotals(playerId: playerId)
         fetchWinLose(playerId: playerId)
-        fetchHeroes()
         fetchMatches(forPlayerId: playerId)
         fetchFavoriteHeroes(playerId: playerId)
-        fetchGameMode()
     }
     
     func viewDidLoad(ui: PlayerDetailViewProtocol) {
         self.ui = ui
+        fetchFavoritesPlayers()
     }
     
     func deletePlayerFromFavorites(player: FavoritePlayer) {
@@ -169,5 +204,17 @@ extension PlayerDetailPresenter: PlayerDetailPresenterProtocol {
             name: player.personaname ?? "player name",
             image: player.avatarfull ?? ""
         )
+    }
+    
+    func cellTapped(heroes: [Hero], gameModes: [String : String], id: Int) {
+        router?.showMatchInfo(matchId: id, gameModes: gameModes, heroes: heroes)
+    }
+    
+    func buttonCellTapped(allHeroes: [Hero], gameModes: [String : String], matches: [PlayerMatch], heroes: [PlayersHero]) {
+        router?.showMatchesAndHeroes(matches: matches, heroes: heroes, allHeroes: allHeroes, gameModes: gameModes)
+    }
+    
+    func popToBackVC() {
+        router?.popToBackVC()
     }
 }

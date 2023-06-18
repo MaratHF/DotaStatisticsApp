@@ -25,6 +25,7 @@ class SearchView: UIView {
         super.init(frame: .zero)
         setupSubviews()
         setConstraints()
+        
     }
     
     required init?(coder: NSCoder) {
@@ -42,11 +43,18 @@ private extension SearchView {
     }
     
     func setupSubviews() {
-        self.backgroundColor = .white
+        self.backgroundColor = .systemBackground
         
+        searchBar.barTintColor = .systemBackground
+        if searchBar.text == "" {
+            searchBar.placeholder = "Введите имя или id игрока"
+        } else {
+            searchBar.placeholder = nil
+        }
         self.addSubview(searchBar)
         
-        tableView.rowHeight = 70
+        tableView.backgroundColor = .systemBackground
+        tableView.rowHeight = CGFloat(Constants.bigCellHeight)
         self.addSubview(tableView)
         
         infoLabel.textAlignment = .center
@@ -81,6 +89,7 @@ extension SearchView: UITableViewDelegate, UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: PlayersTableViewCell.description(), for: indexPath)
                 as? PlayersTableViewCell else { return UITableViewCell() }
         
+        cell.backgroundColor = .systemBackground
         let profile = players[indexPath.row]
         cell.configure(with: profile)
         
