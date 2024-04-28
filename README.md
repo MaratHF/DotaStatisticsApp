@@ -1,3 +1,4 @@
 Приложение со статистикой игроков в Dota 2. С помощью него можно узнать информацию об игроках (сыгранных матчах, любимых героях и т.д.), а также добавить игрока в избранные и следить за его статистикой.
 
-![2024-04-2812 09 54-ezgif com-video-to-gif-converter](https://github.com/MaratHF/DotaStatisticsApp/assets/100717426/0095e976-d1e3-4c57-b51b-aa4594e7d77e)
+
+![2024-04-2812 09 54-ezgif com-resize](https://github.com/MaratHF/DotaStatisticsApp/assets/100717426/c6fc1c7a-b099-4198-9531-160c0b5e7f2f)
